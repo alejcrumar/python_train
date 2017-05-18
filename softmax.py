@@ -28,7 +28,7 @@ plt.plot(x, softmax(scores).T, linewidth=2)
 plt.show()
 
 
-
+# Array practice
 a = np.array([1, 2, 3])
 b = np.array([2, 3, 4])
 c = np.vstack((a,b))
