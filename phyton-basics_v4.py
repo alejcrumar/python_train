@@ -1,11 +1,24 @@
 
-'''
-# Python is and object-oriented programming language
+'''# Python is and object-oriented programming language
 # This object-oriented programming model provides a number of classes 
 # with objects being instances of the class.
 
 '''
 
+
+# Plot images in MLS notebook
+%matplotlib inline  
+
+# iterate by row and shows the id for a given condition
+
+for index, row in df_both.iterrows():
+	if not pd.isnull(row['Termination_Dt']):
+		print(row['ID']) 
+
+
+# Paths of interest
+
+/axp/rim/dsmml/dev/acruzmar/
 
 
 # Settings
@@ -56,6 +69,11 @@ http://nbviewer.jupyter.org/github/RandyBetancourt/PythonForSASUsers/tree/master
 # Resources
 http://www.scipy-lectures.org/intro/numpy/array_object.html
 
+# coool snippets
+
+https://jeffdelaney.me/blog/useful-snippets-in-pandas/
+
+
 
 # Object references
 # b_list = a_list
@@ -71,6 +89,10 @@ print(codecs.decode(this.s, 'rot-13'))
 numbers = [2, 4, 6, 8, 11, 13, 21, \
            17, 31]
 
+		   
+# Count number of elements in list
+len([1,2,3])
+		   
 # Object names are case sensitivity
 		   
 
@@ -81,6 +103,9 @@ type()
 # import multiple objects form a module
 from demo import print_a, print_b
 
+# module operation as a multipe of a fixed number 
+if 101 % 10 == 0:
+    print("True")
 
 
 # find installed packages  
@@ -125,6 +150,13 @@ print 'I "said" do not touch this.'
 # Concatenate strings
 # Print strings without space
 print str(miles) + " miles equals",
+
+# Add a string to a each element in a list
+my_list = ['foo', 'fob', 'faz', 'funk']
+string = 'bar'
+my_new_list = [x + string for x in my_list]
+print my_new_list
+
 
 # Select substring and apply rule to each member in the series 
 d_1['DUM_Jan'] = 0 
@@ -372,6 +404,9 @@ grp_grd['income'].nlargest(3)
 grp_grd['income'].nsmallest(3)
 
 
+# Print the largest and smallest but keeping all the columns
+grp_grd.nlargest(3, 'income')
+
 
 # Convert jupyter notebook into a py file that can be submitted
 
@@ -383,6 +418,7 @@ grp_grd['income'].nsmallest(3)
 
 # First row
 df.iloc[0]
+df.iloc[0]
 
 # last row
 df.iloc[-1]
@@ -391,6 +427,8 @@ df.iloc[-1]
 # df.iloc[row selection, column selection]
 df.iloc[2:4, 0:6]
 
+# Select multiple elements from a row using integer indexes
+exp_df.iloc[0][0,1,2,3]
 
 # show index
 df2.index
@@ -415,8 +453,25 @@ df.index.is_monotonic_increasing
 df2.loc['d':'f',['col6','col2']]
 
 # Slicing subsetting based on a condition 
-df2.loc[(df2.col3 >=  9) & (df2.col1 == 'cool'), ]
+df2.loc[(df2.col3 >=  9) & (df2.col1 == 'cool')]
 df2.loc[df2.col6.isin([6, 9, 13])]
+
+# Slicing subsetting based on condition same usage as or, it works for belonging
+df_1['sample_flag'].isin(("train", "val"))
+
+# Slicing based on a negative condition 
+d_2_dep[d_2_dep.at_risk != 1.0]
+
+# Slicing based on column name for one or multiple columns 
+df['balanceSquared'] 
+df[['EducationLoan', 'balanceAmount']]
+
+
+# Rename column names 
+
+df = df.rename(columns={'oldName1': 'newName1', 'oldName2': 'newName2'})
+
+
 
 # Modifying objects based on condition 
 df2.loc[df2['col6'] > 50, "col2"] = "VERY FAST"\
@@ -425,6 +480,35 @@ df2.loc[: , 'col2']
 # ix can combine labels and indexes
 df4.ix['b':'e', 6:8] 
 
+#  Updating columns based on condition
+df.loc[condition, 'col'] = …
+
+#  Updating columns based on condition
+cond = df['EducationLoan'] == 1
+df[cond, 'BalanceAmount'] = df['BalanceAmount'] * 1000
+
+# Creating a column by transforming an existing column  - use map
+df['balanceSquared'] = df['balanceAmount'].map(lambda x: x ** 2)
+
+def square_it(x):
+    return x ** 2
+
+df['balanceSquared'] = df['balanceAmount'].map(square_it)
+
+
+# Creating a column by transforming multiple columns - Apply is not efficient
+def balance_edu(x):
+    if x['EducationLoan'] == 1:
+        return x['balanceAmount'] * 1000
+    else:
+        return x['balanceAmount']
+
+df['balanceSquared'] = df[['EducationLoan', 'balanceAmount']].apply(balance_edu, axis=1)
+
+
+# Create a column that checks a condition by using np.where
+
+spam_data['target'] = np.where(spam_data['target']=='spam',1,0)
 
 
 # For loop, use the counters
@@ -444,6 +528,11 @@ change = [1, 'pennies', 2, 'dimes', 3, 'quarters']
 for i in change:
     print "I got %r" % i	  
 
+# loop over the components of a dictionary, keys and values
+
+	
+	
+	
 # Maximum and sum by rows and coluns in array
 x = arr[7].max()   # Maximum in row 7
 y = arr[29].sum()  # Sum of the values in row 29
@@ -702,14 +791,13 @@ with open('output.txt', 'w') as f:
     f.write('Hi there!')
 
 	
-# Create data frames
-# By columns
+# Create data frames By columns
 left = pd.DataFrame({'name': ['Gunter, Thomas', 'Harbinger, Nicholas', 'Benito, Gisela', 'Rudelich, Herbert', \
                               'Sirignano, Emily', 'Morrison, Michael', 'Morrison, Michael', 'Onieda, Jacqueline'],
                      'age':          [27, 36, 32, 39, 22, 32, 32, 31],
                      'gender':       ['M', 'M', 'F', 'M', 'F', 'M', 'M', 'F']})
 
-# By rows	
+# Create data frames By rows
 df = pd.DataFrame([['cold','slow', np.nan, 2., 6., 3.], 
                    ['warm', 'medium', 4, 5, 7, 9],
                    ['hot', 'fast', 9, 4, np.nan, 6],
@@ -719,6 +807,45 @@ df = pd.DataFrame([['cold','slow', np.nan, 2., 6., 3.],
                    columns=['col1', 'col2', 'col3', 'col4', 'col5', 'col6'],
                    index=(list('abcdef')))	
 
+# Create empty data frame with column names
+df = pd.DataFrame(columns=COLUMN_NAMES)				   
+				   
+				   
+# Create dataframe from a list using dictionaries for data efficiency
+rows_list = []
+for row in input_rows:
+
+        dict1 = {}
+        # get input row in dictionary format
+        # key = col_name
+		dict1['num_trees'] = 1
+		dict1['log_learning_rate'] = 2
+		dict1['tree_depth'] = 3
+		dict1['value'] = 4
+
+        rows_list.append(dict1)
+
+df = pd.DataFrame(rows_list)        				   
+
+# Create a dataframe using pre existing vectors
+_df_list = {}
+_df_list['epochs'] = x_axis
+_df_list['auc_test'] = results['validation_1']['auc']
+_df_out = pd.DataFrame(_df_list)  
+				  
+
+# Create data frame from lists using a dictionary
+import pandas as pd
+lst1 = range(100)
+lst2 = range(100)
+lst3 = range(100)
+percentile_list = pd.DataFrame(
+    {'lst1Title': lst1,
+     'lst2Title': lst2,
+     'lst3Title': lst3
+    })
+
+				  
 # Merge data frames
 
 Import pandas as pd
@@ -727,7 +854,6 @@ Df1 = pd.read_csv(‘path/filename.csv’, header = 0)
 pd.read_csv(sio, dtype={"user_id": int, "username": object})
 
 Df2 = 
-
 Var1 = ‘income’
 Var2 = ‘email’
 
@@ -738,15 +864,27 @@ Df3 = Df1.merge(right = Df2[[var1, var2, var3]], how = ‘left’, on = [key1, k
 Df3.to_csv(‘newPath/newFileName.csv’, header = True, index = False)
 
 
+# Concatenate columns, equivalent to cbind
+
+test3 = pd.concat([test1, test2], axis=1)
+
+# Concatenate, similar to rbind
+
+result = pd.concat([df1, df4], ignore_index=True)
+
+
 # merge two files
 both 	= 	pd.merge(left, right, on='name', 	how='inner'		, 	sort=True)
-r_outer = 	pd.merge(left, right, 				how='right'		, 	sort=True)  
-l_outer = 	pd.merge(left, right, 				how='left'		, 	sort=True)	# This is what I like to use 
-nomatch = 	pd.merge(left, right, on='name',	how='outer'		, sort=True		, indicator='in=')  # Indicator could be used as the in = _1 variable 
+r_outer = 	pd.merge(left, right, on='name',	how='right'		, 	sort=True)  
+l_outer = 	pd.merge(left, right, on='name',	how='left'		, 	sort=True)	# This is what I like to use 
+nomatch = 	pd.merge(left, right, on='name',	how='outer'		,   sort=True		, indicator='in=')  # Indicator could be used as the in = _1 variable 
 
 # merge multiple files 
 
 
+
+# Save files as csv 
+Df3.to_csv('newPath/newFileName.csv', header = True, index = False)
 
 # drop duplicates based on the column name
 df = df.drop_duplicates('name')
@@ -806,7 +944,10 @@ zscore = lambda x: (x - x.mean()) / x.std()
 type(zscore)
 t_loans = grp_inc_cat.transform(zscore)  
 
-
+# Find all categorical non-numeric variables in a dataset
+# Identify Categorial variables to be used for modeling;
+d_1.info()
+d_1.select_dtypes(include=['object']).head(10)
 
 # proc freq table similar
 
@@ -814,6 +955,11 @@ pd.crosstab([loans.dti_cat], [loans.inc_cat_dec], \
              values=loans.income, aggfunc='count', margins=True, colnames=['Income Deciles'], \
 			 rownames=['Debt/Income Ratio'])
 
+			 
+			 
+# Count for one categorical variable, similar to output of proc freq 
+# Similar to table in R
+d_1_indep.IDN_ACCT_CULNCHGJ.value_counts(dropna = False).sort_index()			 
 
 			 
 # Create a function to replace nan with group average
@@ -872,9 +1018,292 @@ df10 = df2.fillna(method='bfill')	# Backwards fill
 
 
 # Print missing values
-for col_name in d_1.columns:
+for col_name in t.columns:
     print (col_name, end="---->")
-    print (sum(d_1[col_name].isnull()))
+    print (sum(t[col_name].isnull()))
+
+# Print type of columns	
+for col_name in t.columns:
+    print (col_name ,  t[col_name].dtypes)
 	
-for col_name in d_1.columns:
-    print (col_name ,  d_1[col_name].dtypes)
+	
+# Check whether columns are present or not in a dataset	
+for item in _indep_list:
+    if item not in d_1.columns:
+        print(item)	
+		
+		
+# Evaluate time effect 
+# evaluate the effect of the number of threads
+results = []
+num_threads = [1, 2, 3, 4]
+for n in num_threads:
+	start = time.time()
+	model = XGBClassifier(nthread=n)
+	model.fit(X_train, y_train)
+	elapsed = time.time() - start
+	print(n, elapsed)
+	results.append(elapsed)
+	
+	
+# Select all columns starting with a string
+# Names
+d_2.columns[d_2.columns.str.startswith('DUM')]
+# Column values
+d_2.loc[:, d_2.columns.str.startswith('DUM')]d_2.loc[:, d_2.columns.str.startswith('DUM')]
+
+
+# Inplace usage
+
+# Have to assign back to dataframe as it is a copy, replace the old version
+df = df.some_operation(inplace=False) 
+
+# No need to assign back to dataframe
+df.some_operation(inplace=True)
+
+
+# Change type of variable 
+d_1.WO.astype(int)
+
+# Read only a certain number of rows 
+read_csv(..., nrows=999999)
+read_csv(..., skiprows=1000000, nrows=999999)
+
+
+# Read csv file with options
+df_hr_1 = pd.read_csv( _data_dir + _data_hr_name + '.csv', quotechar='"', header = 0, encoding = 'utf8')
+
+
+
+
+# Print in a new line, break line using print
+ print(_data_name + '\n' + 'Second Line')
+ 
+ 
+ # Aggregation similary to proc summary in SAS.
+ # This example includes just one dimension for class variable
+_summary_bydur = _scores_final.groupby(['dur'])['WO', 'gbm_score', 'gbm_score_adj'].mean()
+_summary_bydate = _scores_final.groupby(['as_of_dt'])['WO', 'gbm_score', 'gbm_score_adj'].mean()
+
+
+ 
+ 
+ """
+This is a demo of creating a pdf file with several pages,
+as well as adding metadata and annotations to pdf files.
+"""
+
+import datetime
+import numpy as np
+from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib.pyplot as plt
+
+# Create the PdfPages object to which we will save the pages:
+# The with statement makes sure that the PdfPages object is closed properly at
+# the end of the block, even if an Exception occurs.
+with PdfPages('multipage_pdf.pdf') as pdf:
+    plt.figure(figsize=(3, 3))
+    plt.plot(range(7), [3, 1, 4, 1, 5, 9, 2], 'r-o')
+    plt.title('Page One')
+    pdf.savefig()  # saves the current figure into a pdf page
+    plt.close()
+
+    plt.rc('text', usetex=True)
+    plt.figure(figsize=(8, 6))
+    x = np.arange(0, 5, 0.1)
+    plt.plot(x, np.sin(x), 'b-')
+    plt.title('Page Two')
+    pdf.attach_note("plot of sin(x)")  # you can add a pdf note to
+                                       # attach metadata to a page
+    pdf.savefig()
+    plt.close()
+
+    plt.rc('text', usetex=False)
+    fig = plt.figure(figsize=(4, 5))
+    plt.plot(x, x*x, 'ko')
+    plt.title('Page Three')
+    pdf.savefig(fig)  # or you can pass a Figure object to pdf.savefig
+    plt.close()
+
+    # We can also set the file's metadata via the PdfPages object:
+    d = pdf.infodict()
+    d['Title'] = 'Multipage PDF Example'
+    d['Author'] = u'Jouni K. Sepp\xe4nen'
+    d['Subject'] = 'How to create a multipage pdf file and set its metadata'
+    d['Keywords'] = 'PdfPages multipage keywords author title subject'
+    d['CreationDate'] = datetime.datetime(2009, 11, 13)
+    d['ModDate'] = datetime.datetime.today()
+	
+	
+	
+	
+	
+
+import datetime
+import numpy as np
+
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+
+
+
+with PdfPages('multipage_pdf.pdf') as pdf:
+    fig = plt.figure(figsize=(11.69,8.27))
+    plt.plot([1,2,3], [1,3,2], label="col1")
+    plt.plot([1,2,3],  [2,1,3], label="col2")
+    plt.legend(loc='best')
+    plt.grid(True)
+    plt.title('Title')
+    txt = 'this is an example'
+    plt.text(0.05,0.95,txt, transform=fig.transFigure, size=24)
+    pdf.savefig()
+    plt.close()	
+	
+	
+# Read file, apply desired sampling, and create permanent file
+def data_read_sampling (_file, _sample_size):
+	email_end(_subject = ' data_read_sampling ' + str(_sample_size) + ' Start ')
+	# Load full data 
+	df = pd.read_sas(filepath_or_buffer = _file)
+	# Sample 
+	if len(_sample_size) > 0:
+		df_s = df.sample(_sample_size)
+		email_end(_subject = ' data_read_sampling ' + str(_sample_size) + ' Done ')
+		return df_s
+	else:
+		email_end(_subject = ' data_read_sampling ' + str(_sample_size) + ' Done ')
+		return df
+
+
+# Convert array to list 
+array.tolist()		
+
+# Convert data frame to numpy array
+data_array = data.values
+
+
+# Sort values in data frame by columns
+
+df.sort_values('2')
+
+
+# Frequency tables / same as R table / Calculate frequency tables
+
+http://hamelg.blogspot.com/2015/11/python-for-data-analysis-part-19_17.html
+
+my_tab = pd.crosstab(index=titanic_train["Survived"],  # Make a crosstab
+                              columns="count")      # Name the count column
+
+
+
+survived_class = pd.crosstab(index=titanic_train["Survived"], 
+                            columns=titanic_train["Pclass"],
+                             margins=True)   # Include row and column totals
+
+survived_class.columns = ["class1","class2","class3","rowtotal"]
+survived_class.index= ["died","survived","coltotal"]
+
+survived_class
+
+# Return multiple values in a function using a dictionary 
+def g(x):
+  y0 = x + 1
+  y1 = x * 3
+  y2 = y0 ** y3
+  return {'y0':y0, 'y1':y1 ,'y2':y2 }
+  
+# Return multiple values with commas
+def g(x):
+  y0 = x + 1
+  y1 = x * 3
+  y2 = y0 ** y3
+  return y0, y1, y2
+  
+  
+# Similar to include in SAS
+# Reads a file to execute the commands in it
+from past.builtins import execfile
+execfile('myfile.py')  
+
+# Calculate AUC given a target variable ( series or 1-d array )
+from sklearn.metrics import roc_auc_score
+predictions = model.predict(vect.transform(X_test))
+print('AUC: ', roc_auc_score(y_test, predictions))
+
+
+
+# Print Plotting network and graphs in MLS
+
+import matplotlib.pyplot as plt
+from IPython.display import Image
+
+import networkx as nx
+%matplotlib notebook
+
+# Instantiate the graph
+G1 = nx.Graph()
+# add node/edge pairs
+G1.add_edges_from([(0, 1),
+                   (0, 2),
+                   (0, 3),
+                   (0, 5),
+                   (1, 3),
+                   (1, 6),
+                   (3, 4),
+                   (4, 5),
+                   (4, 7),
+                   (5, 8),
+                   (8, 9)])
+
+# draw the network G1
+nx.draw_networkx(G1)
+
+plt.savefig("dummy.png")
+Image(filename='dummy.png')
+
+
+# Get the maximum length of a string 
+
+ df.col1.map(lambda x: len(x)).max()
+
+ # Find multiple strings in string
+ str is a string
+ a is a list of substring
+
+ if any(x in str for x in a):
+ 
+ 
+ 
+ # SQL code in pandas
+import pandasql as pdsql
+pysql = lambda q: pdsql.sqldf(q, globals())
+
+
+
+
+str_sql = """
+SELECT
+a.recipients				as  id
+,	count(a.sender)				as	num_in
+, 	sum(case when rec.band > send.band  then 1 else 0 end) as num_in_fromlowband
+, 	sum(case when rec.band = send.band then 1 else 0 end) as num_in_fromsameband
+, 	sum(case when rec.band < send.band then 1 else 0 end) as num_in_fromhighband
+FROM 	df_mail_freq_sql a
+left join df_hr_1 rec
+on a.recipients = rec.id
+left join df_hr_1 send
+on a.sender = send.id
+group by a.recipients
+;
+"""
+
+
+df_in_metrics = pysql(str_sql)
+df_in_metrics = df_in_metrics.fillna(0)
+
+
+# List comprehensions
+squares = [x**2 for x in range(1,11) ]
